@@ -30,8 +30,9 @@ class CuentaBancaria:
     def titular(self, nuevo_titular):
         # La validación debe asegurar que el nombre no esté en blanco
         if nuevo_titular == "":
-            print("El nombre del titular no puede estar en blanco.")
+            print("[ERROR]El nombre del titular no puede estar en blanco.")
         else:
+            print(f"[SISTEMA] | Cambio de titular. Viejo: {self.__titular} | Nuevo: {nuevo_titular}")
             self.__titular = nuevo_titular
     
     # Crea un método `depositar(self, cantidad)`.
@@ -39,8 +40,9 @@ class CuentaBancaria:
         # Si la cantidad es mayor a 0, súmala al saldo 
         if cantidad > 0:
             self.__saldo += cantidad
+            print(f"[SISTEMA] | Depósito exitoso. Cantidad: {cantidad} | Saldo actual: {self.__saldo}")
         else:
-            print("La cantidad a depositar debe ser mayor a 0.")
+            print("[ERROR] La cantidad a depositar debe ser mayor a 0.")
 
     # Crea un método `retirar(self, cantidad)`.        
     def retirar(self, cantidad):
