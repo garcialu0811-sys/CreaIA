@@ -67,13 +67,18 @@ class CuentaBancaria:
             print("La tasa de interés no puede ser negativa.")
         else:
             cls.tasa_interes_global = nueva_tasa
-            
+
+print("=" * 85)
+print(f'{"CUENTA BANCARIA":^85}')
+print("=" * 85)
+
+
 # Crea dos cuentas 
 cuenta1 = CuentaBancaria("Alice")
 cuenta2 = CuentaBancaria("Bob")
 
 # Imprime cuántas cuentas existen a nivel global.
-print(f"Total de cuentas creadas: {CuentaBancaria.total_cuentas_creadas}")
+print(f"\nTotal de cuentas creadas: {CuentaBancaria.total_cuentas_creadas}")
 
 # Deposítale 10,000 a cuenta1
 cuenta1.depositar(10000)
