@@ -46,5 +46,20 @@ with open("archivo.txt", "a") as archivo_prueba:
 ## Leer nuestro archivo
 ```py
 with open("archivo.txt", "a") as archivo_prueba:
+
+```
+
+## El metodo `read()` 
+Python tomara todo el contenido del archivo y lo guardara en una sola variable de tipo cadena de texto (string)
+```py
+with open("cuento.txt", "r") as archivo:
+    contenido = archivo.read()
+    print("Contenido completo:")
+    print(contenido)
+```
+
+## Metodo `readline()`
+```python
+with open("lista_alumnos.txt", "r") as archivo:
     
 ```

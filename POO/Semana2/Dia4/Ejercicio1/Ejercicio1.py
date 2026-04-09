@@ -9,4 +9,4 @@ with open ("registro.txt", "r") as archivo_registro:
         print(f"-> {texto_limpio}")
         cantidad += 1
 
-    print(f"Total de líneas leídas: {cantidad}")
+print(f"Total de líneas leídas: {cantidad}")
