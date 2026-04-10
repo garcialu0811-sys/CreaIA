@@ -1,82 +1,84 @@
-
+# Creacion de la clase SensorPresion
 class SensorPresion:
-    # Atributos de Clase (Constantes y Contadores)
-    LIMITE_PELIGRO = 200
+    # Creacion de variables de clase
     total_lecturas = 0
-
+    limite_peligroso = 200
+    
+    # Creacion del constructor de la clase 
     def __init__(self, nombre_del_sensor):
-        self.nombre = nombre_del_sensor
-        # Atributo privado obligatorio (Encapsulamiento)
+        # Creacion del atributo privado __presion
         self.__presion = 0
+        self.nombre = nombre_del_sensor
 
+    # Creacion de @property para el atributo privado __presion que actua como getter
     @property
     def presion(self):
-        """Getter para obtener el valor privado."""
         return self.__presion
-
+    
+    # Creacion de su respectivo @presion.setter para el atributo privado __presion que actua como setter
     @presion.setter
-    def presion(self, valor_ingresado):
-        """Setter con validación de lógica de negocio."""
-        if valor_ingresado < 0:
-            print(f"[ADVERTENCIA]: Valor negativo corregido a 0 en {self.nombre}.")
-            self.__presion = 0
+    def presion(self, valor_presion):
+        if valor_presion < 0:
+            print("[ERROR] La presion no puede ser negativa.")
         else:
-            self.__presion = valor_ingresado
-
+            self.__presion = valor_presion
 
 
 def procesar_monitoreo():
-    # Contador local para el archivo de alertas
-    cantidad_sensores_criticos = 0
-    
-    print(">>> INICIANDO PROCESAMIENTO DE REGISTROS <<<")
+    #se crea un contador local para el archivo de alertas
+    cantidad_sensores_alerta = 0
 
-    # Abrimos los archivos usando 'with' para asegurar el cierre automático
-    with open("registros.txt", "r") as archivo_entrada:
-        with open("alertas.txt", "w") as archivo_salida:
-            
-            # Escribir encabezado en el archivo
-            archivo_salida.write("REPORTE DE INCIDENCIAS\n")
-            archivo_salida.write("=" * 30 + "\n")
+    print("=" * 50)
+    print(f"{" --- SISTEMA DE MONITOREO INDUSTRIAL --- ":^50}")
 
-            for linea in archivo_entrada:
-                # Limpiar espacios y saltos de línea
+    # Creacion de with open para la lectura del archivo registros.txt y la creacion del archivo de alertas.txt
+    with open("registros.txt", "r") as archivo_de_lectura:
+        with open("alertas.txt", "w") as archivo_de_escritura:
+
+            archivo_de_escritura.write("--- REPORTE DE INCIDENCIAS - CALDERAS CRÍTICAS ---\n")
+            archivo_de_escritura.write("=" * 50 + "\n")
+
+            for linea in archivo_de_lectura:
+                # Limpiamos espacios y saltos de línea
                 linea_limpia = linea.strip()
-                
-                if linea_limpia != "":
-                    # Separar nombre de la presión
-                    datos = linea_limpia.split(",")
-                    nombre_sensor = datos[0]
-                    valor_presion = int(datos[1])
 
-                    # Crear objeto y asignar presión (activando validación)
+                if linea_limpia != "":
+                    indice_coma = 0
+                    posicion_actual = 0
+
+                    nombre_sensor = linea_limpia[:indice_coma]
+                    valor_text_presion = linea_limpia[indice_coma + 1:]
+                    valor_presion = int(valor_text_presion)
+
+                    # Creamos objeto y procesar
                     sensor_actual = SensorPresion(nombre_sensor)
                     sensor_actual.presion = valor_presion
-                    
-                    # Incrementar contador global de la clase
+
+                    # Incrementamos el contador de lecturas totales
                     SensorPresion.total_lecturas += 1
 
-                    # Determinar estado para la simulación en consola
-                    if sensor_actual.presion > SensorPresion.LIMITE_PELIGRO:
-                        estado_consola = "[PELIGRO]"
-                        cantidad_sensores_criticos += 1
-                        # Escribir en el archivo de alertas
-                        archivo_salida.write(f"{cantidad_sensores_criticos}. {sensor_actual.nombre}\n")
+                    # Determinamos el estado para la simulacion en consola
+                    if sensor_actual.presion > SensorPresion.limite_peligroso:
+                        estado = "¡PELIGRO!"
+                        cantidad_sensores_alerta += 1
+                        archivo_de_escritura.write(f"Sensor: {sensor_actual.nombre} - Presión: {sensor_actual.presion} - Estado: {estado}\n")
                     else:
-                        estado_consola = "[SEGURO]"
+                        estado = "Seguro"
+                    
+                    print(f"Analizando: {sensor_actual.nombre} | Estado: {estado}")
+            
+            # Escribimos el resumen final en el archivo de alertas
+            archivo_de_escritura.write("\n" + "=" * 50 + "\n")
+            archivo_de_escritura.write(f"{"--- RESUMEN FINAL ---":^50}\n")
+            archivo_de_escritura.write(f"Total de lecturas: {SensorPresion.total_lecturas}\n")
+            archivo_de_escritura.write(f"Sensores en estado crítico: {cantidad_sensores_alerta}\n")
+            archivo_de_escritura.write(f"{"--- CALDERAS CRÍTICAS ---":^50}\n")
+        
+    print(f"{'--- PROCESAMIENTO COMPLETADO CON EXITO ---':^50}")
+    print("Archivo \"alertas.txt\" creado exitosamente.")
 
-                    # Imprimir en consola tal como aparece en la simulación del PDF
-                    print(f"Analizando: {sensor_actual.nombre} | Presión: {sensor_actual.presion} | Estado: {estado_consola}")
-
-            # Escribir el resumen final en el archivo de texto
-            archivo_salida.write("=" * 30 + "\n")
-            archivo_salida.write(f"RESUMEN DEL MONITOREO:\n")
-            archivo_salida.write(f"- Total de lecturas: {SensorPresion.total_lecturas}\n")
-            archivo_salida.write(f"- Sensores críticos: {cantidad_sensores_criticos}\n")
-            archivo_salida.write("\nCALDERAS CRÍTICAS")
-
-    print(">>> PROCESAMIENTO COMPLETADO CON ÉXITO <<<")
-    print("Archivo 'alertas.txt' generado correctamente.")
-
-# --- Ejecución del Sistema ---
+# Llamamos a la funcion para procesar el monitoreo
 procesar_monitoreo()
+
+
+

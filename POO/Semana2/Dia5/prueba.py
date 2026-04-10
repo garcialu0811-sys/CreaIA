@@ -1,5 +1,3 @@
-
-
 class SensorPresion:
     # Atributos de Clase
     LIMITE_PELIGRO = 200

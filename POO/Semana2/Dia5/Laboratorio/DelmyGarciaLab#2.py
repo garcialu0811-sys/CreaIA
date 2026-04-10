@@ -20,12 +20,12 @@ class SensorPresion:
     def presion(self, valor_presion):
         if valor_presion < 0:
             print("[ERROR] La presion no puede ser negativa.")
+            self.__presion = 0 
         else:
             self.__presion = valor_presion
 
-
 def procesar_monitoreo():
-    #se crea un contador local para el archivo de alertas
+    # Se crea un contador local para el archivo de alertas
     cantidad_sensores_alerta = 0
 
     print("=" * 50)
@@ -46,9 +46,14 @@ def procesar_monitoreo():
                     indice_coma = 0
                     posicion_actual = 0
 
+                    for caracter in linea_limpia:
+                        if caracter == ",":
+                            indice_coma = posicion_actual
+                        posicion_actual += 1
+
                     nombre_sensor = linea_limpia[:indice_coma]
-                    valor_text_presion = linea_limpia[indice_coma + 1:]
-                    valor_presion = int(valor_text_presion)
+                    valor_texto_presion = linea_limpia[indice_coma + 1:]
+                    valor_presion = int(valor_texto_presion)
 
                     # Creamos objeto y procesar
                     sensor_actual = SensorPresion(nombre_sensor)
@@ -79,6 +84,3 @@ def procesar_monitoreo():
 
 # Llamamos a la funcion para procesar el monitoreo
 procesar_monitoreo()
-
-
-
