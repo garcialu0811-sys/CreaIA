@@ -1,5 +1,4 @@
 
-
 class SensorPresion:
     # Atributos de Clase (Constantes y Contadores)
     LIMITE_PELIGRO = 200
