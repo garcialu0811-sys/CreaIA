@@ -49,5 +49,28 @@ print(f"La billetera creada: {billetera_familiar.propietario}")
 print(f"El saldo combinado es: {billetera_familiar.monto}")
 ```
 
-## Ejercicio
-- Una
+## La bodega de Herramientas (Importando modulos)
+### FORMA 1: Importar la caja completa
+- Vamos a usar la palabra reservada `import` seguida del nombre de la caja
+- Esto tra la caja entera a nuestra mesa. para usar una herramienta que esta adentro, debemos escribir el nombre de la caja, un punto `.`, y luego el nombre de la herramienta
+
+```py
+print("--- FORMA 1: LA CAJA COMPLETA ---")
+
+# 1. Traemos la caja entera desde la bodega
+import math
+
+# 2. para usarla, debemos mencionar la caja primerp
+raiz = math.sqrt(25)
+
+print(f"La raíz cuadrada es: {raiz}")
+```
+
+### FORMA 2: Importa herramientas especificas
+- Usamos la sintaxis `from [nombre_caja]
+
+### FORMA 3: Importar con un apodo (Alias)
+- python nos permite ponerle un apodo corto usando la palabra `as` (como)
+
+### FORMA 4: Importa nuestras propias cajas de herramientas (Modulos personalizados)
+- Paso 1: creamos el archivo que funcionara com caja

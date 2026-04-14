@@ -38,4 +38,3 @@ print("===== RESUMEN FINAL =====")
 print(f"Total inventario: Q {resumen_final.precio_producto}")
 
 
-
