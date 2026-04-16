@@ -1,6 +1,6 @@
-#  Ejercicio integrador: 
+# Ejercicio integrador: 
 # Actúan como Ingenieros desarrollando un sistema de Biblioteca. 
-# * **Instrucciones del Ejercicio:**
+#  **Instrucciones del Ejercicio:**
 #     1. Creen la clase `Libro`.
 #         * Constructor: Recibe `titulo` y `autor`.
 #         * Método `__str__`: Debe retornar el texto `"{titulo}" escrito por {autor}`.
