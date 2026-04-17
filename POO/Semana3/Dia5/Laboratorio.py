@@ -198,5 +198,4 @@ def ejecutar_sistema():
             case _:
                 print("[!] Opción inválida, intente de nuevo.")
 
-
 ejecutar_sistema()
