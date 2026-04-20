@@ -36,5 +36,3 @@ class VistaBiblioteca:
 
         return input("Seleccione una opción: ")
     
-    @staticmethod
-    
