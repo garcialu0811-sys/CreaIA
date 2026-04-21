@@ -2,265 +2,237 @@ from abc import ABC, abstractmethod
 import random
 
 class Pokemon(ABC):
-    """
-    Clase base abstracta que define la estructura de un Pokémon.
-    Implementa encapsulamiento para HP y Energía.
-    """
-    
-    def __init__(self, nombre: str, hp_maximo: int, energia_maxima: int):
-        self._nombre = nombre
-        self._hp_maximo = hp_maximo
-        self._hp_actual = hp_maximo
-        self._energia_maxima = energia_maxima
-        self._energia_actual = energia_maxima
-        self._defendiendo = False  # Estado de defensa activa
-    
-    # ========== Propiedades y Setters (Encapsulamiento) ==========
-    
-    @property
-    def nombre(self):
-        return self._nombre
-    
+    def __init__(self, nombre, hp_maximo, energia_maxima):
+        self.nombre = nombre
+        self.hp_maximo = hp_maximo
+        self. energia_maxima = energia_maxima
+        self.__hp_actual = hp_maximo
+        self.__energia_actual = energia_maxima
+        self.__defendiendo = False
+        self.__paralizado = False
+        
+    # Getter de hp_actual
     @property
     def hp_actual(self):
-        return self._hp_actual
+        return self.__hp_actual
     
+    # Setter para no permitir valor negativos en hp
     @hp_actual.setter
-    def hp_actual(self, valor):
-        """Setter que nunca permite valores negativos de HP."""
-        if valor < 0:
-            self._hp_actual = 0
+    def hp_actual(self, nuevo_valor):
+        # Si es menor a 0 lo deja en 0
+        if nuevo_valor < 0:
+            self.__hp_actual = 0
+        # Si no, guarda el valor normal
         else:
-            self._hp_actual = valor
-    
-    @property
-    def hp_maximo(self):
-        return self._hp_maximo
-    
+            self.__hp_actual = nuevo_valor
+            
+    # Getter de energia_actual
     @property
     def energia_actual(self):
-        return self._energia_actual
+        return self.__energia_actual
     
+    # Setter que no permite energia negativa ni mayor al maximo
     @energia_actual.setter
-    def energia_actual(self, valor):
-        """Setter que no permite energía negativa ni mayor al máximo."""
-        if valor < 0:
-            self._energia_actual = 0
-        elif valor > self._energia_maxima:
-            self._energia_actual = self._energia_maxima
+    def energia_actual(self, nuevo_valor):
+        # Si es negativa la deja en 0
+        if nuevo_valor < 0:
+            self.__energia_actual = 0
+        # Si supera el maximo, la iguala al maximo
+        elif nuevo_valor > self.energia_maxima:
+            self.__energia_actual = self.energia_maxima
         else:
-            self._energia_actual = valor
-    
-    @property
-    def energia_maxima(self):
-        return self._energia_maxima
-    
+            self.__energia_actual = nuevo_valor
+
     @property
     def defendiendo(self):
-        return self._defendiendo
+        return self.__defendiendo
     
     @defendiendo.setter
-    def defendiendo(self, valor):
-        self._defendiendo = valor
+    def defendiendo(self, nuevo_valor):
+        self.__defendiendo = nuevo_valor
+        
+    @property
+    def paralizado(self):
+        return self.__paralizado
+
+    @paralizado.setter
+    def paralizado(self, nuevo_valor):
+        self.__paralizado = nuevo_valor
     
-    # ========== Métodos de Acción ==========
-    
+    # Metodo abstracto que sera sobrescrito por cada clase hija
     @abstractmethod
     def atacar(self, oponente):
-        """Método abstracto que será sobrescrito por cada clase hija (Polimorfismo)."""
         pass
     
+    # Metodo defender, que consume 5 EP y reduce el da;o al proximo ataque a la mitad
     def defender(self):
-        """
-        Acción de defensa: consume 5 EP y reduce el daño del próximo ataque a la mitad.
-        """
         costo_ep = 5
+
         if self.energia_actual >= costo_ep:
             self.energia_actual -= costo_ep
             self.defendiendo = True
             return f"{self.nombre} se ha puesto en guardia. Reducirá el daño del próximo ataque a la mitad."
         else:
-            return f"{self.nombre} no tiene suficiente energía para defenderse (Necesita {costo_ep} EP)."
-    
-    def descansar(self):
-        """
-        Acción de descanso: restaura 20 EP pero no ataca.
-        """
-        restauracion = 20
-        self.energia_actual += restauracion
-        # Cancelamos estado de defensa al descansar
-        self.defendiendo = False
-        return f"{self.nombre} descansa y recupera {restauracion} EP. Ahora tiene {self.energia_actual}/{self.energia_maxima} EP."
-    
-    def recibir_dano(self, dano: int):
-        """
-        Aplica daño al Pokémon, respetando el estado de defensa (reduce a la mitad si está defendiendo).
-        """
-        dano_final = dano
-        if self.defendiendo:
-            dano_final = dano // 2
-            self.defendiendo = False  # La defensa solo dura un turno
+            return f"{self.nombre} no tiene sificiente energía para defenderse (Necesita {costo_ep} EP)."
         
-        self.hp_actual -= dano_final
-        return dano_final
+    # Método descansar
+    def descansar(self):
+        restaurar_ep = 20
+        self.energia_actual += restaurar_ep
+        #Cancelamos el estado de defensa al descansar
+        self.defendiendo = False
+        return f"{self.nombre} descansa y recupera {restaurar_ep} EP. Ahora tiene {self.energia_actual}/{self.energia_maxima} EP."
     
-    def esta_vivo(self) -> bool:
-        """Verifica si el Pokémon aún tiene HP."""
+    # Metodo recibir daño
+    def recibir_dano(self, dano):
+        dano_final = dano  # Guarda daño inicial
+        
+        if self.defendiendo:  # Si estaba defendiendo
+            dano_final = dano // 2  # Reduce daño a la mitad
+            self.defendiendo = False  # Desactiva defensa
+        
+        self.hp_actual -= dano_final  # Resta vida
+        return dano_final  # Retorna daño recibido
+    
+    # Verifica si sigue vivo
+    def esta_vivo(self):
         return self.hp_actual > 0
     
-    def __str__(self):
-        return f"{self.nombre} [{self.tipo}] | HP: {self.hp_actual}/{self.hp_maximo} | EP: {self.energia_actual}/{self.energia_maxima}"
+    # Muestra información del objeto en formato legible
+    def __str__(self): 
+        return f"{self.nombre} [{self.tipo}] HP:{self.hp_actual}/{self.hp_maximo} EP:{self.energia_actual}/{self.energia_maxima}"
     
+    # Será sobrescrito por cada clase hija para definir su tipo específico
     @property
     def tipo(self):
-        """Propiedad que debe ser sobrescrita en las clases hijas."""
-        return "Desconocido"
-
-
-# ========== Clases Hijas (Herencia y Polimorfismo) ==========
+        return "Desconocido"   
 
 class PokemonAgua(Pokemon):
-    """Pokémon de tipo Agua - Ventaja contra Fuego (x2)"""
-    
     @property
     def tipo(self):
         return "Agua"
-    
+
     def atacar(self, oponente):
-        """
-        Ataque de Agua.
-        - Daño base: 20
-        - Costo EP: 15
-        - Súper efectivo (x2) contra Fuego
-        """
-        costo_ep = 15
+        if self.paralizado:
+            self.paralizado = False
+            return f"{self.nombre} está paralizado y no puede moverse. Pierde su turno.", 0
         
-        # Validar energía suficiente
+        costo_ep = 15  # Energía necesaria
+
         if self.energia_actual < costo_ep:
             return f"{self.nombre} no tiene suficiente energía para atacar (Necesita {costo_ep} EP).", 0
+
+        self.energia_actual -= costo_ep  # Consume energía
+        dano_base = 20  # Daño base
+        multiplicador = 1  # Multiplicador normal
+        mensaje_efectividad = ""  # Texto de efectividad
         
-        # Consumir energía
-        self.energia_actual -= costo_ep
-        dano_base = 20
-        
-        # Calcular multiplicador según tipo del oponente (Polimorfismo)
-        multiplicador = 1
-        mensaje_efectividad = ""
-        
-        if oponente.tipo == "Fuego":
+        if isinstance(oponente, PokemonFuego):
             multiplicador = 2
-            mensaje_efectividad = "¡Es súper efectivo!"
-        elif oponente.tipo == "Planta":
+            mensaje = "¡Es súper efectivo!"
+        elif isinstance(oponente, PokemonPlanta):
             multiplicador = 0.5
-            mensaje_efectividad = "No es muy efectivo..."
+            mensaje = "El ataque no fue muy efectivo..."
         
-        dano_total = int(dano_base * multiplicador)
-        
-        # Aplicar daño al oponente
-        dano_real = oponente.recibir_dano(dano_total)
+        dano_total = int(dano_base * multiplicador)  # Calcula daño total
+        dano_real = oponente.recibir_dano(dano_total)  # Aplica daño
         
         mensaje = f"{self.nombre} usa un ataque de AGUA! {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
         return mensaje, dano_real
 
 
 class PokemonFuego(Pokemon):
-    """Pokémon de tipo Fuego - Ventaja contra Planta (x2)"""
-    
     @property
     def tipo(self):
         return "Fuego"
-    
+
     def atacar(self, oponente):
-        costo_ep = 15
+        if self.paralizado:
+            self.paralizado = False
+            return f"{self.nombre} está paralizado y no puede moverse. Pierde su turno.", 0
         
+        costo_ep = 15
+
         if self.energia_actual < costo_ep:
             return f"{self.nombre} no tiene suficiente energía para atacar (Necesita {costo_ep} EP).", 0
-        
+
         self.energia_actual -= costo_ep
         dano_base = 20
-        
         multiplicador = 1
         mensaje_efectividad = ""
         
-        if oponente.tipo == "Planta":
+        if isinstance(oponente, PokemonPlanta):
             multiplicador = 2
             mensaje_efectividad = "¡Es súper efectivo!"
-        elif oponente.tipo == "Agua":
+
+        elif isinstance(oponente, PokemonAgua):
             multiplicador = 0.5
-            mensaje_efectividad = "No es muy efectivo..."
-        
+            mensaje_efectividad = "El ataque no fue muy efectivo..."
+
         dano_total = int(dano_base * multiplicador)
         dano_real = oponente.recibir_dano(dano_total)
-        
-        mensaje = f"{self.nombre} usa un ataque de FUEGO! {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
-        return mensaje, dano_real
 
+        texto = f"{self.nombre} usa ataque de FUEGO. {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
+        return texto, dano_real
 
 class PokemonPlanta(Pokemon):
-    """Pokémon de tipo Planta - Ventaja contra Agua (x2)"""
-    
     @property
     def tipo(self):
         return "Planta"
-    
+
     def atacar(self, oponente):
-        costo_ep = 15
+        if self.paralizado:
+            self.paralizado = False
+            return f"{self.nombre} está paralizado y no puede moverse. Pierde su turno.", 0
         
+        costo_ep = 15
+
         if self.energia_actual < costo_ep:
             return f"{self.nombre} no tiene suficiente energía para atacar (Necesita {costo_ep} EP).", 0
-        
+
         self.energia_actual -= costo_ep
         dano_base = 20
-        
         multiplicador = 1
         mensaje_efectividad = ""
         
-        if oponente.tipo == "Agua":
+        if isinstance(oponente, PokemonAgua):
             multiplicador = 2
             mensaje_efectividad = "¡Es súper efectivo!"
-        elif oponente.tipo == "Fuego":
+
+        elif isinstance(oponente, PokemonFuego):
             multiplicador = 0.5
-            mensaje_efectividad = "No es muy efectivo..."
-        
+            mensaje_efectividad = "El ataque no fue muy efectivo..."
+
         dano_total = int(dano_base * multiplicador)
         dano_real = oponente.recibir_dano(dano_total)
-        
-        mensaje = f"{self.nombre} usa un ataque de PLANTA! {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
-        return mensaje, dano_real
 
+        texto = f"{self.nombre} usa ataque de PLANTA. {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
+        return texto, dano_real
 
 class PokemonElectrico(Pokemon):
-    """
-    Pokémon de tipo Eléctrico - Sin ventaja de daño doble,
-    pero con 20% de probabilidad de paralizar al oponente.
-    """
-    
     @property
     def tipo(self):
         return "Electrico"
-    
+
     def atacar(self, oponente):
-        costo_ep = 15
+        if self.paralizado:
+            self.paralizado = False
+            return f"{self.nombre} está paralizado y no puede moverse. Pierde su turno.", 0
         
+        costo_ep = 15
+
         if self.energia_actual < costo_ep:
             return f"{self.nombre} no tiene suficiente energía para atacar (Necesita {costo_ep} EP).", 0
-        
+
         self.energia_actual -= costo_ep
         dano_base = 20
-        
-        # Eléctrico no tiene ventaja de daño doble, pero puede paralizar
-        multiplicador = 1
         mensaje_efectividad = ""
-        
-        # 20% de probabilidad de paralizar
+
         if random.random() < 0.2:
-            # La paralización se implementará como pérdida del siguiente turno
-            # Usamos un atributo temporal en el oponente
             oponente.paralizado = True
-            mensaje_efectividad = "¡El oponente ha sido paralizado! Perderá su próximo turno."
-        
-        dano_total = int(dano_base * multiplicador)
-        dano_real = oponente.recibir_dano(dano_total)
-        
-        mensaje = f"{self.nombre} usa un ataque ELÉCTRICO! {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
-        return mensaje, dano_real
+            mensaje_efectividad = f"¡{oponente.nombre} ha quedado paralizado y perderá su próximo turno!"
+            
+        dano_real = oponente.recibir_dano(dano_base)
+
+        texto = f"{self.nombre} usa ataque ELÉCTRICO. {mensaje_efectividad} {oponente.nombre} recibe {dano_real} puntos de daño."
+        return texto, dano_real
