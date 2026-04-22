@@ -71,19 +71,16 @@ class ControladorBiblioteca:
             opcion = self.vista.mostrar_menu()
 
             if opcion == "1":
-                # Añadir Libro
                 titulo, autor, id_libro = self.vista.pedir_datos_libro()
                 nuevo_libro = Libro(titulo, autor, id_libro)
                 self.modelo_biblioteca.agregar_libro(nuevo_libro)
                 self.vista.mostrar_mensaje("Libro registrado con éxito.")
 
             elif opcion == "2":
-                # Listar Libros
                 libros = self.modelo_biblioteca.libros
                 self.vista.mostrar_tabla(libros)
 
             elif opcion == "3":
-                # Prestar Libro
                 id_a_buscar = self.vista.pedir_id_prestamo()
                 libro = self.modelo_biblioteca.buscar_por_id(id_a_buscar)
                 
@@ -105,3 +102,8 @@ class ControladorBiblioteca:
 if __name__ == "__main__":
     bibliotecca = ControladorBiblioteca()
     bibliotecca.ejecutar()
+    
+    
+    
+    
+    
