@@ -1,21 +1,17 @@
 -- NULL
--- 1. todos los usuarios con el correo null
+
+-- todo los usuarios con el correo nulo
 SELECT *
 FROM users
 WHERE email IS NULL;
 
--- 2. todos los usuarios con el correo no null
+-- todo los usuarios con el correo no nulo
 SELECT *
 FROM users
 WHERE email IS NOT NULL;
 
--- 3. todos los usuarios con el correo no null y la edad mayor a 25
-SELECT *
-FROM users
-WHERE email IS NOT NULL AND age > 25;
-
--- 4. ifnull
--- es una funcion que  me va a permitir reemplazar el valor nulo por otro valor que yo le indique
--- obtener el nombre, apellido, y edad de la tabla users y si la edad es nula, remplazarla por 0
-SELECT name, lastname, IFNULL(age, 0) AS age
+-- ifnull
+-- es una función que me va a permitir reemplazar el valor nulo por otro valor que yo le indique
+-- obtener el nombre, apellido y edad de la tabla users y si la edad es nula, reemplazarla por 0
+SELECT name, last_name, IFNULL(age, 0) AS age
 FROM users;

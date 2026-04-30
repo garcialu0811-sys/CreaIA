@@ -1,30 +1,30 @@
--- forma 1
--- acotar los resultados, limitando cual es el criterio de seleccion
-    -- que datos queremos
-    -- de que tabla
-    -- bajo que condiciones
+-- acotar los resultados, limitando cual es el criterio de selección
+
+    -- que dtos queremos 
+    -- de qué tabla
+    -- bajo qué condiciones
 
 SELECT * FROM users WHERE age > 30;
 
--- forma 2
-SELECT
-FROM users
+SELECT * 
+FROM users 
 WHERE age > 30;
 
-igual =
-difernte != / <>
-mayor >
-menor <
-mayor o igual >=
-menor o igual <=
+-- igual =
+-- diferente != o <>
+-- mayor >
+-- menor <
+-- mayor o igual >=
+-- menor o igual <=
 
--- solo nombre de la tabla de usuarios con la edad igual a 20
-SELECT name FROM users WHERE age = 20;
-
+-- solo nombre de la tabla de usuario con la edad igual a 25
 SELECT name 
 FROM users 
-WHERE age = 20;
+WHERE age >= 20;
 
-
--- filtar todas las edades distintas de la tabla usuarios con edad igual a 22
+-- filtrar todas las edades distintas de la tabla con edad igual a 22
+-- filtrar todas las edades distintas de la tabla con edad igual a 22
+SELECT distinct name, user_id, age
+FROM users 
+WHERE age = 22;
 
