@@ -1,0 +1,1 @@
+busqueda dinamica % para eso sirve el %
